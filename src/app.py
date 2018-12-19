@@ -1,6 +1,6 @@
 import codecs
 import json
-
+import os
 from pymongo import MongoClient
 import csv
 
@@ -427,10 +427,16 @@ def store_road_image(_id):
                 img_date = gps['date_taken']
 
                 filename = file.filename
-                URI = "mongodb://127.0.0.1:27017"
+#                URI = "mongodb://127.0.0.1:27017"
+#                client = pymongo.MongoClient(URI)
+#                DATABASE = client['RMI']
+
+                URI = os.environ['MONGODB_URI']
                 client = pymongo.MongoClient(URI)
-                DATABASE = client['RMI']
+                DATABASE = client['heroku_dl5cdgz5']
+
                 fs = gridfs.GridFS(DATABASE)
+
                 #            print(file)
                 fileid = fs.put(file, filename=filename)
                 #            fileid = fs.put(request.files['Image_upload'].read(), filename=filename)
@@ -462,9 +468,14 @@ def road_image_data():
 
 @app.route('/roads_image_table_block/<string:Block>')
 def road_image_data_block(Block):
-    URI = "mongodb://127.0.0.1:27017"
+#    URI = "mongodb://127.0.0.1:27017"
+#    client = pymongo.MongoClient(URI)
+#    DATABASE = client['RMI']
+
+    URI = os.environ['MONGODB_URI']
     client = pymongo.MongoClient(URI)
-    DATABASE = client['RMI']
+    DATABASE = client['heroku_dl5cdgz5']
+
     roads_image = DATABASE['road_images'].find({'block': Block})
     json_roads = []
     for road in roads_image:
@@ -487,9 +498,14 @@ def road_new_habitation(Block):
 
 @app.route('/roads_image_find/')
 def road_image_data_id(fileid):
-    URI = "mongodb://127.0.0.1:27017"
+#    URI = "mongodb://127.0.0.1:27017"
+#    client = pymongo.MongoClient(URI)
+#    DATABASE = client['RMI']
+
+    URI = os.environ['MONGODB_URI']
     client = pymongo.MongoClient(URI)
-    DATABASE = client['RMI']
+    DATABASE = client['heroku_dl5cdgz5']
+
     roads_image = DATABASE['road_images'].find({'fileid': fileid})
     json_roads = []
     for road in roads_image:
@@ -513,9 +529,13 @@ def roads_img_list():
 
 @app.route('/road/image/load/<string:_id>', methods=['POST', 'GET'])
 def preview_road_image(_id):
-                URI = "mongodb://127.0.0.1:27017"
+#                URI = "mongodb://127.0.0.1:27017"
+#                client = pymongo.MongoClient(URI)
+#                DATABASE = client['RMI']
+
+                URI = os.environ['MONGODB_URI']
                 client = pymongo.MongoClient(URI)
-                DATABASE = client['RMI']
+                DATABASE = client['heroku_dl5cdgz5']
 
                 fid = ""
                 fs = gridfs.GridFS(DATABASE)
