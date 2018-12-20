@@ -474,7 +474,7 @@ def road_image_data_block(Block):
 
     URI = os.environ['MONGODB_URI']
     client = pymongo.MongoClient(URI)
-    DATABASE = client['heroku_dl5cdgz5']
+    DATABASE = client['heroku_53fkq4k5']
 
     roads_image = DATABASE['road_images'].find({'block': Block})
     json_roads = []
@@ -504,7 +504,7 @@ def road_image_data_id(fileid):
 
     URI = os.environ['MONGODB_URI']
     client = pymongo.MongoClient(URI)
-    DATABASE = client['heroku_dl5cdgz5']
+    DATABASE = client['heroku_53fkq4k5']
 
     roads_image = DATABASE['road_images'].find({'fileid': fileid})
     json_roads = []
@@ -535,7 +535,7 @@ def preview_road_image(_id):
 
                 URI = os.environ['MONGODB_URI']
                 client = pymongo.MongoClient(URI)
-                DATABASE = client['heroku_dl5cdgz5']
+                DATABASE = client['heroku_53fkq4k5']
 
                 fid = ""
                 fs = gridfs.GridFS(DATABASE)
