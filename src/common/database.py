@@ -12,7 +12,7 @@ class Database(object):
     @staticmethod
     def initialize():
        client = pymongo.MongoClient(Database.URI)
-       Database.DATABASE = client['heroku_dl5cdgz5']
+       Database.DATABASE = client['heroku_53fkq4k5']
 
     #URI = "mongodb://127.0.0.1:27017"
     #DATABASE = None
