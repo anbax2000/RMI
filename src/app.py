@@ -350,7 +350,7 @@ def road_prop_update(_id):
                                        culvert_chain=culvert_chain, culvert_width=culvert_width,
                                        culvert_number=culvert_number, rds_id=_id)
 
-        return render_template('record_saved.html', road_para_upd=road_para_upd)
+        return render_template('record_saved.html')
 
 
 @app.route('/roads_image_new/')
@@ -366,43 +366,6 @@ def render_roads_img():
         return render_template('login_fail.html')
 
 
-def _convert_to_degress(value):
-    """
-    Helper function to convert the GPS coordinates stored in the EXIF to degress in float format
-    :param value:
-    :type value: exifread.utils.Ratio
-    :rtype: float
-    """
-    d = float(value.values[0].num) / float(value.values[0].den)
-    m = float(value.values[1].num) / float(value.values[1].den)
-    s = float(value.values[2].num) / float(value.values[2].den)
-
-    return d + (m / 60.0) + (s / 3600.0)
-
-
-def getGPS(f):
- #       global lng_value
-        tags = ef.process_file(f)
-        latitude = tags.get('GPS GPSLatitude')
-        latitude_ref = tags.get('GPS GPSLatitudeRef')
-        longitude = tags.get('GPS GPSLongitude')
-        longitude_ref = tags.get('GPS GPSLongitudeRef')
-        altitude = tags.get('GPS GPSAltitude')
-        date_taken = tags.get('EXIF DateTimeOriginal')
-
-        if latitude:
-            lat_value = _convert_to_degress(latitude)
-            if latitude_ref.values != 'N':
-                lat_value = -lat_value
-        else:
-            lat_value = None
-        if longitude:
-            lng_value = _convert_to_degress(longitude)
-            if longitude_ref.values != 'E':
-                lng_value = -lng_value
-        else:
-            lng_value = None
-        return {'latitude': lat_value, 'longitude': lng_value, "altitude": altitude, "date_taken": date_taken}
 def latlon(f):
     """
     returns a dict of lat, lon, alt, filename values, given file with PIL method 
