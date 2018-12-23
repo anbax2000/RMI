@@ -2,9 +2,12 @@ import codecs
 import json
 import os
 from pymongo import MongoClient
-import csv
+#import csv
 
 #import exifread as ef
+from PIL import Image
+from PIL.ExifTags import TAGS
+from datetime import datetime as dt
 import gridfs
 import pymongo
 from bson import json_util
