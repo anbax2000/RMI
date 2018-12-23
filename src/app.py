@@ -4,7 +4,7 @@ import os
 from pymongo import MongoClient
 import csv
 
-import exifread as ef
+#import exifread as ef
 import gridfs
 import pymongo
 from bson import json_util
@@ -433,7 +433,7 @@ def store_road_image(_id):
 
                 URI = os.environ['MONGODB_URI']
                 client = pymongo.MongoClient(URI)
-                DATABASE = client['heroku_dl5cdgz5']
+                DATABASE = client['heroku_53fkq4k5']
 
                 fs = gridfs.GridFS(DATABASE)
 
@@ -455,9 +455,12 @@ def store_road_image(_id):
 
 @app.route('/roads_image_table/')
 def road_image_data():
-    URI = "mongodb://127.0.0.1:27017"
+#    URI = "mongodb://127.0.0.1:27017"
+#    client = pymongo.MongoClient(URI)
+#    DATABASE = client['RMI']
+    URI = os.environ['MONGODB_URI']
     client = pymongo.MongoClient(URI)
-    DATABASE = client['RMI']
+    DATABASE = client['heroku_53fkq4k5']
     roads_image = DATABASE['road_images'].find({})
     json_roads = []
     for road in roads_image:
