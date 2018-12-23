@@ -400,7 +400,47 @@ def getGPS(f):
         else:
             lng_value = None
         return {'latitude': lat_value, 'longitude': lng_value, "altitude": altitude, "date_taken": date_taken}
+def latlon(f):
+    """
+    returns a dict of lat, lon, alt, filename values, given file with PIL method 
 
+    """
+    img = Image.open(f)
+    info = img._getexif()
+    # build a dict of decoded exif keys and values
+    decoded = dict((TAGS.get(key, key), value) for key, value in info.items())
+    info = {
+ #       "filename": filename,
+        "lat": None,
+        "lon": None,
+        "timestamp": None,
+        "altitude": None,
+    }
+    # ensure that this photo contains GPS data, or return an empty dict:
+    if not decoded.get('GPSInfo'):
+        return info
+    lat = [float(x) / float(y) for x, y in decoded['GPSInfo'][2]]
+    lon = [float(x) / float(y) for x, y in decoded['GPSInfo'][4]]
+    alt = float(decoded['GPSInfo'][6][0]) / float(decoded['GPSInfo'][6][1])
+    timestamp = decoded['DateTimeOriginal']
+    # assign values to dict
+#    info['filename'] = filename
+    info['lat'] = (lat[0] + lat[1] / 60)
+    info['lon'] = (lon[0] + lon[1] / 60)
+    info['timestamp'] = dt.strptime(
+        timestamp,
+        "%Y:%m:%d %H:%M:%S").strftime("%Y/%m/%d %H:%M:%S")
+    info['altitude'] = alt
+    # corrections if necessary
+    if decoded['GPSInfo'][1] == "S":
+        info['lat'] *= -1
+    if decoded['GPSInfo'][3] == "W":
+        info['lon'] *= -1
+    # if we're below sea level, the value's negative
+    if decoded['GPSInfo'][5] == 1:
+        info['altitude'] *= -1
+#    return {lat, lon, timestamp, alt}
+    return info
 
 @app.route('/road/image/<string:_id>', methods=['POST', 'GET'])
 def store_road_image(_id):
@@ -419,12 +459,12 @@ def store_road_image(_id):
 
         for file, file1 in zip(request.files.getlist("Image_upload"), request.files.getlist("Image_upload2")):
 
-            gps = getGPS(file1)
-            if gps['longitude'] is not None:
-                lat = gps['longitude']
-                lon = gps['latitude']
+            gps = latlon(file1)
+            if gps['lat'] is not None:
+                lat = gps['lat']
+                lon = gps['lon']
                 alt = gps['altitude']
-                img_date = gps['date_taken']
+                img_date = gps['timestamp']
 
                 filename = file.filename
 #                URI = "mongodb://127.0.0.1:27017"
