@@ -312,6 +312,7 @@ def create_road_prop(_id):
         culvert_number = request.form['member']
 
         for i in range(int(culvert_number)):
+            print(culvert_number)
             ctype = "culvert_type" + str(i)
             cchain = "culvert_chain" + str(i)
             cwidth = "culvert_width" + str(i)
